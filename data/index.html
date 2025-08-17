@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self';">
+    <title>Configuración del controlador</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Configuración del controlador</h1>
+    </header>
+    <main>
+        <section id="bluetooth">
+            <h2>Inicialización por Bluetooth</h2>
+            <form>
+                <div class="field">
+                    <label for="bt_name">Nombre del dispositivo</label>
+                    <input type="text" id="bt_name" name="bt_name" placeholder="Mi Controlador" autocomplete="off">
+                </div>
+            </form>
+        </section>
+        <section id="network">
+            <h2>Configuración de red</h2>
+            <form>
+                <div class="field">
+                    <label for="ssid">SSID Wi‑Fi</label>
+                    <input type="text" id="ssid" name="ssid" placeholder="Nombre de la red" autocomplete="off">
+                </div>
+                <div class="field">
+                    <label for="wifi_pass">Contraseña Wi‑Fi</label>
+                    <input type="password" id="wifi_pass" name="wifi_pass" placeholder="********">
+                </div>
+                <div class="field">
+                    <label for="ip">Dirección IP</label>
+                    <input type="text" id="ip" name="ip" placeholder="192.168.1.100" pattern="\d{1,3}(\.\d{1,3}){3}">
+                </div>
+                <div class="field">
+                    <label for="gateway">Gateway</label>
+                    <input type="text" id="gateway" name="gateway" placeholder="192.168.1.1" pattern="\d{1,3}(\.\d{1,3}){3}">
+                </div>
+                <div class="field">
+                    <label for="dns">DNS</label>
+                    <input type="text" id="dns" name="dns" placeholder="8.8.8.8" pattern="\d{1,3}(\.\d{1,3}){3}">
+                </div>
+                <button type="submit" disabled>Guardar</button>
+            </form>
+        </section>
+    </main>
+    <footer>
+        <p>Interfaz de demostración sin funciones activas.</p>
+    </footer>
+    <script src="script.js"></script>
+</body>
+</html>
