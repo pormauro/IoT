@@ -1,0 +1,56 @@
+[
+  {
+    "type": "group",
+    "label": "General",
+    "icon": "📋",
+    "children": [
+      { "type": "link", "route": "/inicio", "label": "Inicio", "icon": "🏠" },
+      { "type": "link", "route": "/dispositivo", "label": "Dispositivo", "icon": "🛠️" }
+    ]
+  },
+  {
+    "type": "group",
+    "label": "Red",
+    "icon": "🌐",
+    "children": [
+      { "type": "link", "route": "/wifi", "label": "Wi-Fi", "icon": "📶" },
+      { "type": "link", "route": "/ipv4", "label": "IPv4/Ethernet", "icon": "🪪" },
+      { "type": "link", "route": "/bluetooth", "label": "Bluetooth", "icon": "🔵" },
+      {
+        "type": "group",
+        "label": "Perfiles",
+        "icon": "🗂️",
+        "children": [
+          { "type": "link", "route": "/perfiles", "label": "Perfiles de Red", "icon": "📑" }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "group",
+    "label": "Modbus",
+    "icon": "🧯",
+    "children": [
+      { "type": "link", "route": "/modbus-tcp", "label": "Modbus TCP/IP", "icon": "🟩" },
+      { "type": "link", "route": "/modbus-rtu", "label": "Modbus RTU", "icon": "🟧" }
+    ]
+  },
+  {
+    "type": "group",
+    "label": "Gateway",
+    "icon": "🔗",
+    "children": [
+      { "type": "link", "route": "/gateway", "label": "Mapping", "icon": "🔀" },
+      { "type": "link", "route": "/diagnostico", "label": "Diagnóstico", "icon": "🩺" }
+    ]
+  },
+  {
+    "type": "group",
+    "label": "Sistema",
+    "icon": "🖥️",
+    "children": [
+      { "type": "link", "route": "/firmware", "label": "Actualización", "icon": "⬆️" },
+      { "type": "link", "route": "/seguridad", "label": "Seguridad", "icon": "🔒" }
+    ]
+  }
+]

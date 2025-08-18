@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>DEPROS — Panel de Configuración</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header>
+    <div class="hdr">
+      <div class="brand">
+        <img src="logo.webp" alt="DEPROS" class="brand-logo" />
+        <h1>Placa de Reporte Automatico de Tanque</h1>
+      </div>
+
+      <div class="status">
+        <!-- Botón para móviles: abre/cierra el menú -->
+        <button id="toggle-sidebar" class="menu-btn" aria-controls="side-drawer" aria-expanded="false">
+          ☰ Menú
+        </button>
+
+        <span class="badge"><span class="dot" style="background:var(--ok)"></span>Online</span>
+        <span class="badge"><span class="dot" style="background:var(--warn)"></span>Demo (sin lógica)</span>
+        <button id="toggle-theme" class="theme-toggle" aria-pressed="false" title="Cambiar tema">
+          <span class="ico">🌙</span><span class="txt">Dark</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="layout">
+    <!-- Barra lateral (ID para accesibilidad y JS). En móvil funciona como drawer -->
+    <aside class="sidebar" id="side-drawer">
+      <div class="side-head">
+        <div class="side-head-left">
+          <p class="title">Menú</p>
+        </div>
+      </div>
+      <!-- Menú recursivo inyectado por JS -->
+      <nav class="side-nav" aria-label="Navegación lateral" id="side-nav"></nav>
+    </aside>
+
+    <!-- Backdrop para móviles (cierra el drawer al tocar afuera) -->
+    <div class="backdrop" id="backdrop" hidden></div>
+
+    <!-- Contenido principal -->
+    <div class="content">
+      <main>
+        <!-- Página: Inicio -->
+        <section class="page active" id="page-inicio">
+          <div class="grid">
+            <section class="card full">
+              <div class="hd"><h2>Bienvenido</h2><span class="hint">Panel de configuración (UI demo)</span></div>
+              <div class="bd">
+                <p>Usá el menú lateral para navegar. Podés alternar Light/Dark desde la derecha del encabezado.</p>
+                <ul>
+                  <li>Configurá Wi-Fi y perfiles.</li>
+                  <li>Definí red IPv4/Ethernet con opciones pro.</li>
+                  <li>Activá Bluetooth (BLE/SPP).</li>
+                  <li>Seteá parámetros del dispositivo y seguridad.</li>
+                </ul>
+              </div>
+            </section>
+          </div>
+        </section>
+
+        <!-- Página: Wi-Fi -->
+        <section class="page" id="page-wifi">
+          <div class="grid">
+            <section class="card">
+              <div class="hd"><h2>Red • Wi-Fi</h2><span class="hint">UI estática</span></div>
+              <div class="bd">
+                <div class="banner ok" id="wifi-banner-ok">Conexión simulada OK</div>
+                <div class="banner err" id="wifi-banner-err">No se pudo conectar (demo)</div>
+                <div class="row">
+                  <div class="col-6">
+                    <label for="wifi-ssid">SSID</label>
+                    <div class="input-wrap">
+                      <input id="wifi-ssid" type="text" placeholder="MiRed">
+                      <button class="inline-action" id="btn-scan">Escanear</button>
+                    </div>
+                    <div class="hint">Usa el escaneo para elegir SSID y seguridad.</div>
+                  </div>
+                  <div class="col-6">
+                    <label for="wifi-pass">Contraseña</label>
+                    <div class="input-wrap">
+                      <input id="wifi-pass" type="password" placeholder="••••••••">
+                      <button class="inline-action" id="btn-show">Mostrar</button>
+                    </div>
+                    <div class="hint">Recomendado WPA2/WPA3. Evitar WEP.</div>
+                  </div>
+                  <div class="col-4"><label for="wifi-mode">Modo</label><select id="wifi-mode"><option>STA (cliente)</option><option>AP (punto de acceso)</option><option>AP+STA</option></select></div>
+                  <div class="col-4"><label for="wifi-band">Banda</label><select id="wifi-band"><option>2.4 GHz</option><option>5 GHz (si disponible)</option></select></div>
+                  <div class="col-4"><label>SSID oculto</label><select><option>No</option><option>Sí</option></select></div>
+                </div>
+              </div>
+              <div class="actions">
+                <button class="btn ghost" id="btn-test-wifi">Probar conexión</button>
+                <button class="btn primary">Guardar Wi-Fi</button>
+              </div>
+            </section>
+          </div>
+        </section>
+
+        <!-- Página: Perfiles -->
+        <section class="page" id="page-perfiles">
+          <div class="grid">
+            <section class="card">
+              <div class="hd"><h2>Perfiles de Red</h2><span class="hint">Plantillas locales (demo)</span></div>
+              <div class="bd">
+                <table aria-label="Perfiles almacenados">
+                  <thead><tr><th>Nombre</th><th>SSID</th><th>Seguridad</th><th>Últ. uso</th><th>Acciones</th></tr></thead>
+                  <tbody>
+                    <tr><td>Planta A</td><td>DEPROS-IoT</td><td><span class="pill">WPA3</span></td><td>hoy</td><td><button class="btn">Aplicar</button> <button class="btn">Eliminar</button></td></tr>
+                    <tr><td>Oficina</td><td>Planta-Prod</td><td><span class="pill">WPA2</span></td><td>ayer</td><td><button class="btn">Aplicar</button> <button class="btn">Eliminar</button></td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="actions" style="justify-content:flex-start">
+                <button class="btn">Nuevo perfil</button>
+                <button class="btn">Exportar</button>
+                <button class="btn">Importar</button>
+              </div>
+            </section>
+          </div>
+        </section>
+
+        <!-- Página: IPv4/Ethernet -->
+        <section class="page" id="page-ipv4">
+          <div class="grid">
+            <section class="card full">
+              <div class="hd"><h2>Red • IPv4 / Ethernet</h2><span class="hint">DHCP o estática</span></div>
+              <div class="bd">
+                <div class="row">
+                  <div class="col-3"><label>Modo IP</label><select><option>DHCP</option><option>Estática</option></select></div>
+                  <div class="col-3"><label>Interfaz preferida</label><select><option>Wi-Fi</option><option>Ethernet</option></select></div>
+                  <div class="col-2"><label>IP</label><input type="text" placeholder="192.168.1.120"></div>
+                  <div class="col-2"><label>Máscara</label><input type="text" placeholder="255.255.255.0"></div>
+                  <div class="col-2"><label>Gateway</label><input type="text" placeholder="192.168.1.1"></div>
+                  <div class="col-2"><label>DNS</label><input type="text" placeholder="1.1.1.1, 8.8.8.8"></div>
+                  <div class="col-2"><label>VLAN</label><input type="number" placeholder="20" min="1" max="4094"></div>
+                  <div class="col-2"><label>MTU</label><input type="number" placeholder="1500"></div>
+                  <div class="col-3"><label>mDNS/Hostname</label><input type="text" placeholder="device.local"></div>
+                  <div class="col-3"><label>LLDP (ETH)</label><select><option>Desactivado</option><option>Activado</option></select></div>
+                  <div class="col-12"><div class="hint">Validar formato CIDR/IP al integrar con firmware. Sugerido: aplicar temporal + rollback automático.</div></div>
+                </div>
+              </div>
+              <div class="actions">
+                <button class="btn">Aplicar temporal</button>
+                <button class="btn primary">Guardar Red</button>
+              </div>
+            </section>
+          </div>
+        </section>
+
+        <!-- Página: Bluetooth -->
+        <section class="page" id="page-bluetooth">
+          <div class="grid">
+            <section class="card">
+              <div class="hd"><h2>Bluetooth</h2><span class="hint">BLE/SPP</span></div>
+              <div class="bd">
+                <div class="row">
+                  <div class="col-6"><label>Nombre del dispositivo</label><input type="text" placeholder="DEPROS-Controller"></div>
+                  <div class="col-6"><label>Perfil</label><select><option>BLE (GATT)</option><option>Serial Bluetooth (SPP)</option></select></div>
+                  <div class="col-6"><label>Visible</label><select><option>Sí</option><option>No</option></select></div>
+                  <div class="col-6"><label>PIN/Passkey</label><input type="text" placeholder="000000"></div>
+                  <div class="col-6"><label>Tx Power</label><select><option>Bajo</option><option>Medio</option><option>Alto</option></select></div>
+                  <div class="col-6"><label>Advertising (ms)</label><input type="number" placeholder="200"></div>
+                </div>
+              </div>
+              <div class="actions">
+                <button class="btn">Probar anuncio</button>
+                <button class="btn primary">Guardar Bluetooth</button>
+              </div>
+            </section>
+          </div>
+        </section>
+
+        <!-- Página: Dispositivo -->
+        <section class="page" id="page-dispositivo">
+          <div class="grid">
+            <section class="card">
+              <div class="hd"><h2>Dispositivo / Sensores</h2><span class="hint">General</span></div>
+              <div class="bd">
+                <div class="row">
+                  <div class="col-6"><label>Tipo de dispositivo</label><select><option>Genérico</option><option>Gateway</option><option>Medidor</option><option>Actuador</option></select></div>
+                  <div class="col-6"><label>Zona / Ubicación</label><input type="text" placeholder="Planta A - Línea 2"></div>
+                  <div class="col-6"><label>Intervalo de muestreo (ms)</label><input type="number" placeholder="100"></div>
+                  <div class="col-6"><label>Registro de logs</label><select><option>Errores</option><option>Info</option><option>Debug</option><option>Silencioso</option></select></div>
+                </div>
+              </div>
+              <div class="actions">
+                <button class="btn">Exportar JSON</button>
+                <button class="btn primary">Guardar Dispositivo</button>
+              </div>
+            </section>
+          </div>
+        </section>
+
+        <!-- Página: Modbus TCP/IP -->
+        <section class="page" id="page-modbus-tcp">
+          <div class="grid">
+            <section class="card">
+              <div class="hd"><h2>Modbus TCP/IP</h2><span class="hint">Cliente (master) / Servidor (slave) — UI</span></div>
+              <div class="bd">
+                <div class="row">
+                  <div class="col-4"><label>Modo</label><select><option>Cliente (Master)</option><option>Servidor (Slave)</option></select></div>
+                  <div class="col-4"><label>IP del servidor</label><input type="text" placeholder="192.168.1.50"></div>
+                  <div class="col-2"><label>Puerto</label><input type="number" placeholder="502"></div>
+                  <div class="col-2"><label>Unit ID</label><input type="number" placeholder="1" min="1" max="247"></div>
+                  <div class="col-3"><label>Timeout (ms)</label><input type="number" placeholder="1500"></div>
+                  <div class="col-3"><label>Retries</label><input type="number" placeholder="2"></div>
+                  <div class="col-3"><label>Endianess</label><select><option>Big-Endian</option><option>Little-Endian</option></select></div>
+                  <div class="col-3"><label>Swap 32-bit</label><select><option>No</option><option>Sí (Word Swap)</option></select></div>
+                </div>
+              </div>
+              <div class="actions">
+                <button class="btn">Test conexión</button>
+                <button class="btn primary">Guardar TCP/IP</button>
+              </div>
+            </section>
+
+            <section class="card">
+              <div class="hd"><h2>Plan de Polling</h2><span class="hint">Lecturas periódicas</span></div>
+              <div class="bd">
+                <table aria-label="Polling">
+                  <thead><tr><th>#</th><th>Func</th><th>Dirección</th><th>Cantidad</th><th>Tipo</th><th>Periodo (ms)</th><th>Mapea a</th><th>Acción</th></tr></thead>
+                  <tbody>
+                    <tr><td>1</td><td>0x03</td><td>40001</td><td>2</td><td>Float32</td><td>500</td><td>tags/temp</td><td><button class="btn">Editar</button></td></tr>
+                    <tr><td>2</td><td>0x04</td><td>30001</td><td>1</td><td>Uint16</td><td>1000</td><td>tags/rssi</td><td><button class="btn">Editar</button></td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="actions" style="justify-content:flex-start">
+                <button class="btn">Añadir tarea</button>
+                <button class="btn">Importar CSV</button>
+                <button class="btn">Exportar CSV</button>
+              </div>
+            </section>
+          </div>
+        </section>
+
+        <!-- Página: Modbus RTU -->
+        <section class="page" id="page-modbus-rtu">
+          <div class="grid">
+            <section class="card">
+              <div class="hd"><h2>Modbus RTU</h2><span class="hint">UART / RS-485 — UI</span></div>
+              <div class="bd">
+                <div class="row">
+                  <div class="col-3"><label>Puerto UART</label><select><option>UART0</option><option>UART1</option><option>UART2</option></select></div>
+                  <div class="col-3"><label>Baudrate</label><input type="number" placeholder="9600"></div>
+                  <div class="col-2"><label>Paridad</label><select><option>N</option><option>E</option><option>O</option></select></div>
+                  <div class="col-2"><label>Stop bits</label><select><option>1</option><option>2</option></select></div>
+                  <div class="col-2"><label>Data bits</label><select><option>8</option><option>7</option></select></div>
+                  <div class="col-3"><label>Timeout (ms)</label><input type="number" placeholder="1500"></div>
+                  <div class="col-3"><label>Retries</label><input type="number" placeholder="2"></div>
+                  <div class="col-3"><label>DE/RE Pin</label><input type="text" placeholder="GPIO22"></div>
+                  <div class="col-3"><label>Unit ID</label><input type="number" placeholder="1" min="1" max="247"></div>
+                </div>
+              </div>
+              <div class="actions">
+                <button class="btn">Test bus</button>
+                <button class="btn primary">Guardar RTU</button>
+              </div>
+            </section>
+
+            <section class="card">
+              <div class="hd"><h2>Mapa de Registros</h2><span class="hint">Lecturas/Escrituras</span></div>
+              <div class="bd">
+                <table aria-label="Mapa de registros">
+                  <thead><tr><th>Nombre</th><th>Func</th><th>Addr</th><th>Tipo</th><th>Escala</th><th>Offset</th><th>Unidad</th><th>R/W</th><th>Acción</th></tr></thead>
+                  <tbody>
+                    <tr><td>TempProc</td><td>0x03</td><td>40001</td><td>Float32</td><td>0.1</td><td>0</td><td>°C</td><td>R</td><td><button class="btn">Editar</button></td></tr>
+                    <tr><td>SetPoint</td><td>0x06</td><td>40010</td><td>Uint16</td><td>1</td><td>0</td><td>°C</td><td>W</td><td><button class="btn">Editar</button></td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="actions" style="justify-content:flex-start">
+                <button class="btn">Añadir registro</button>
+                <button class="btn">Duplicar</button>
+                <button class="btn">Eliminar</button>
+              </div>
+            </section>
+          </div>
+        </section>
+
+        <!-- Página: Gateway / Mapping -->
+        <section class="page" id="page-gateway">
+          <div class="grid">
+            <section class="card">
+              <div class="hd"><h2>MQTT</h2><span class="hint">Publicación/Suscripción</span></div>
+              <div class="bd">
+                <div class="row">
+                  <div class="col-4"><label>Broker</label><input type="text" placeholder="mqtt://192.168.1.100"></div>
+                  <div class="col-2"><label>Puerto</label><input type="number" placeholder="1883"></div>
+                  <div class="col-3"><label>Cliente ID</label><input type="text" placeholder="depros-gw-01"></div>
+                  <div class="col-3"><label>Base topic</label><input type="text" placeholder="planta/a1"></div>
+                  <div class="col-4"><label>Usuario</label><input type="text" placeholder="user"></div>
+                  <div class="col-4"><label>Contraseña</label><input type="password" placeholder="••••••••"></div>
+                  <div class="col-4"><label>TLS</label><select><option>Desactivado</option><option>Activado (UI)</option></select></div>
+                </div>
+              </div>
+              <div class="actions">
+                <button class="btn">Probar MQTT</button>
+                <button class="btn primary">Guardar MQTT</button>
+              </div>
+            </section>
+
+            <section class="card">
+              <div class="hd"><h2>HTTP/Webhook</h2><span class="hint">Push opcional</span></div>
+              <div class="bd">
+                <div class="row">
+                  <div class="col-6"><label>URL</label><input type="text" placeholder="https://api.midominio.com/hooks/ingest"></div>
+                  <div class="col-3"><label>Método</label><select><option>POST</option><option>PUT</option></select></div>
+                  <div class="col-3"><label>Encabezado Auth</label><input type="text" placeholder="Bearer ..."></div>
+                </div>
+              </div>
+              <div class="actions">
+                <button class="btn">Probar HTTP</button>
+                <button class="btn primary">Guardar HTTP</button>
+              </div>
+            </section>
+
+            <section class="card full">
+              <div class="hd"><h2>Mapping de Tags</h2><span class="hint">Modbus ⇄ MQTT/HTTP</span></div>
+              <div class="bd">
+                <table aria-label="Mapping">
+                  <thead><tr><th>Tag</th><th>Origen</th><th>Transformación</th><th>Destino</th><th>QoS/Retain</th><th>Acción</th></tr></thead>
+                  <tbody>
+                    <tr>
+                      <td>temp_proceso</td>
+                      <td>RTU:40001 Float32</td>
+                      <td>(x*0.1)+0</td>
+                      <td>MQTT: planta/a1/temp</td>
+                      <td>Q1 / Retain</td>
+                      <td><button class="btn">Editar</button></td>
+                    </tr>
+                    <tr>
+                      <td>setpoint</td>
+                      <td>TCP:40010 Uint16</td>
+                      <td>identity</td>
+                      <td>MQTT: planta/a1/cmd/setpoint</td>
+                      <td>Q1 / No</td>
+                      <td><button class="btn">Editar</button></td>
+                    </tr>
+                  </tbody>
+                </table>
+                <div class="hint">Al integrar: validación de rangos, debouncing, empaquetado por lote, timestamps.</div>
+              </div>
+              <div class="actions" style="justify-content:flex-start">
+                <button class="btn">Añadir tag</button>
+                <button class="btn">Importar JSON</button>
+                <button class="btn">Exportar JSON</button>
+              </div>
+            </section>
+          </div>
+        </section>
+
+        <!-- Página: Diagnóstico -->
+        <section class="page" id="page-diagnostico">
+          <div class="grid">
+            <section class="card">
+              <div class="hd"><h2>Pruebas Rápidas</h2><span class="hint">Lectura / Escritura</span></div>
+              <div class="bd">
+                <div class="row">
+                  <div class="col-3"><label>Bus</label><select><option>Modbus TCP</option><option>Modbus RTU</option></select></div>
+                  <div class="col-2"><label>Func</label><select><option>0x03 Read Holding</option><option>0x04 Read Input</option><option>0x06 Write Single</option><option>0x10 Write Multiple</option></select></div>
+                  <div class="col-2"><label>Dirección</label><input type="number" placeholder="40001"></div>
+                  <div class="col-2"><label>Count</label><input type="number" placeholder="2"></div>
+                  <div class="col-3"><label>Tipo</label><select><option>Uint16</option><option>Int16</option><option>Float32</option><option>Uint32</option></select></div>
+                  <div class="col-12"><label>Payload (hex/num)</label><input type="text" placeholder="0x000A,0x000B"></div>
+                </div>
+                <div class="hint">En UI real: mostrar frame TX/RX, tiempos y código de excepción.</div>
+              </div>
+              <div class="actions">
+                <button class="btn">Leer</button>
+                <button class="btn">Escribir</button>
+              </div>
+            </section>
+
+            <section class="card">
+              <div class="hd"><h2>Monitoreo</h2><span class="hint">KPIs de Gateway</span></div>
+              <div class="bd">
+                <div class="row">
+                  <div class="col-3"><label>TX paquetes</label><input type="text" placeholder="0" disabled></div>
+                  <div class="col-3"><label>RX paquetes</label><input type="text" placeholder="0" disabled></div>
+                  <div class="col-3"><label>Errores</label><input type="text" placeholder="0" disabled></div>
+                  <div class="col-3"><label>Conexiones</label><input type="text" placeholder="0" disabled></div>
+                  <div class="col-12"><label>Captura de tráfico</label><select><option>Off</option><option>On (ring buffer)</option></select></div>
+                </div>
+              </div>
+              <div class="actions">
+                <button class="btn">Descargar Log</button>
+                <button class="btn primary">Limpiar contadores</button>
+              </div>
+            </section>
+          </div>
+        </section>
+
+        <!-- Página: Firmware -->
+        <section class="page" id="page-firmware">
+          <div class="grid">
+            <section class="card">
+              <div class="hd"><h2>Actualización de Firmware (OTA)</h2><span class="hint">Subida directa o por URL</span></div>
+              <div class="bd">
+                <div class="row">
+                  <div class="col-6"><label>Archivo BIN</label><input type="file" disabled></div>
+                  <div class="col-6"><label>OTA por URL</label><input type="text" placeholder="https://servidor/firmware.bin"></div>
+                  <div class="col-3"><label>Versión actual</label><input type="text" placeholder="v1.0.0" disabled></div>
+                  <div class="col-3"><label>Versión destino</label><input type="text" placeholder="v1.0.1"></div>
+                  <div class="col-3"><label>Checksum (SHA256)</label><input type="text" placeholder="abcdef..."></div>
+                  <div class="col-3"><label>Auto-reboot</label><select><option>Activado</option><option>Desactivado</option></select></div>
+                  <div class="col-12"><label>Notas de versión</label><textarea placeholder="Cambios de la versión..." rows="3"></textarea></div>
+                </div>
+              </div>
+              <div class="actions">
+                <button class="btn">Comprobar actualización</button>
+                <button class="btn">Subir BIN</button>
+                <button class="btn primary">Instalar</button>
+                <button class="btn">Rollback</button>
+              </div>
+            </section>
+
+            <section class="card">
+              <div class="hd"><h2>Historial</h2><span class="hint">Registros de OTA</span></div>
+              <div class="bd">
+                <table aria-label="Historial OTA">
+                  <thead><tr><th>Fecha</th><th>Versión</th><th>Resultado</th><th>Detalle</th></tr></thead>
+                  <tbody>
+                    <tr><td>2025-08-10</td><td>v1.0.0</td><td>OK</td><td>Instalación limpia</td></tr>
+                    <tr><td>2025-07-28</td><td>v0.9.9</td><td>OK</td><td>Primera carga</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </section>
+          </div>
+        </section>
+
+        <!-- Página: Seguridad -->
+        <section class="page" id="page-seguridad">
+          <div class="grid">
+            <section class="card">
+              <div class="hd"><h2>Seguridad</h2><span class="hint">Buenas prácticas</span></div>
+              <div class="bd">
+                <div class="row">
+                  <div class="col-6"><label>Usuario admin</label><input type="text" placeholder="admin"></div>
+                  <div class="col-6"><label>Contraseña</label><input type="password" placeholder="••••••••"></div>
+                  <div class="col-6"><label>HTTPS</label><select><option>Activado</option><option>Desactivado</option></select></div>
+                  <div class="col-6"><label>API Tokens (RO)</label><select><option>Desactivado</option><option>Activado</option></select></div>
+                  <div class="col-12"><div class="hint">En firmware real: CSP estricta, cookies HttpOnly/SameSite, deshabilitar CORS salvo orígenes confiables.</div></div>
+                </div>
+              </div>
+              <div class="actions">
+                <button class="btn">Rotar clave</button>
+                <button class="btn primary">Guardar Seguridad</button>
+              </div>
+            </section>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <!-- Modal de escaneo Wi-Fi (mock) -->
+  <div class="modal" id="scan-modal" role="dialog" aria-modal="true" aria-labelledby="scan-title">
+    <div class="dialog">
+      <div class="hd"><strong id="scan-title">Redes Wi-Fi detectadas</strong><button class="btn" id="scan-close">Cerrar</button></div>
+      <div class="bd">
+        <table aria-label="Resultados de escaneo">
+          <thead><tr><th>SSID</th><th>Seguridad</th><th>Canal</th><th>RSSI</th><th>Acción</th></tr></thead>
+          <tbody>
+            <tr><td>Planta-Prod</td><td><span class="pill">WPA2</span></td><td>6</td><td>-48 dBm</td><td><button class="btn" data-choose-ssid="Planta-Prod">Elegir</button></td></tr>
+            <tr><td>DEPROS-IoT</td><td><span class="pill">WPA3</span></td><td>1</td><td>-62 dBm</td><td><button class="btn" data-choose-ssid="DEPROS-IoT">Elegir</button></td></tr>
+            <tr><td>Invitados</td><td><span class="pill">Abierta</span></td><td>11</td><td>-70 dBm</td><td><button class="btn" data-choose-ssid="Invitados">Elegir</button></td></tr>
+          </tbody>
+        </table>
+        <div class="hint">En el dispositivo real: <code>esp_wifi_scan_start()</code> → parseo → render.</div>
+      </div>
+      <div class="ft"><button class="btn primary" id="scan-refresh">Volver a escanear</button></div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
