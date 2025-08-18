@@ -115,8 +115,14 @@
     if(body.classList.contains('sidebar-open')) closeSidebar(); else openSidebar();
   }
 
-  if(menuBtn) menuBtn.addEventListener('click', toggleSidebar);
-  if(backdrop) backdrop.addEventListener('click', closeSidebar);
+  if(menuBtn){
+    menuBtn.addEventListener('click', toggleSidebar);
+    menuBtn.addEventListener('touchstart', (e)=>{ e.preventDefault(); toggleSidebar(); });
+  }
+  if(backdrop){
+    backdrop.addEventListener('click', closeSidebar);
+    backdrop.addEventListener('touchstart', (e)=>{ e.preventDefault(); closeSidebar(); });
+  }
   window.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeSidebar(); });
 
   // ---------- Router ----------
