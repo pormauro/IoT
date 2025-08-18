@@ -57,7 +57,7 @@
         items.className='group-items'; items.dataset.level=level;
         g.appendChild(items);
         container.appendChild(g);
-        if(node.children?.length) renderTree(node.children,items,level+1);
+        if(node.children && node.children.length) renderTree(node.children,items,level+1);
       }else if(node.type==='link'){
         const a=document.createElement('a');
         a.href=`#${node.route}`; a.className='nav-item'; a.dataset.route=node.route; a.dataset.level=level;
@@ -77,16 +77,19 @@
   const toggleBtn=$('#toggle-theme');
   function updateToggle(){
     const dark=root.classList.contains('dark');
-    toggleBtn?.setAttribute('aria-pressed', dark?'true':'false');
-    const ico=toggleBtn?.querySelector('.ico'); const txt=toggleBtn?.querySelector('.txt');
+    if(toggleBtn) toggleBtn.setAttribute('aria-pressed', dark?'true':'false');
+    const ico=toggleBtn ? toggleBtn.querySelector('.ico') : null;
+    const txt=toggleBtn ? toggleBtn.querySelector('.txt') : null;
     if(ico) ico.textContent = dark ? '☀️' : '🌙';
     if(txt) txt.textContent = dark ? 'Light' : 'Dark';
   }
-  toggleBtn?.addEventListener('click', ()=>{
-    root.classList.toggle('dark');
-    localStorage.setItem(themeKey, root.classList.contains('dark')?'dark':'light');
-    updateToggle();
-  });
+  if(toggleBtn){
+    toggleBtn.addEventListener('click', ()=>{
+      root.classList.toggle('dark');
+      localStorage.setItem(themeKey, root.classList.contains('dark')?'dark':'light');
+      updateToggle();
+    });
+  }
   updateToggle();
 
   // ---------- Drawer móvil ----------
@@ -97,31 +100,32 @@
 
   function openSidebar(){
     body.classList.add('sidebar-open');
-    menuBtn?.setAttribute('aria-expanded','true');
-    backdrop?.removeAttribute('hidden');
+    if(menuBtn) menuBtn.setAttribute('aria-expanded','true');
+    if(backdrop) backdrop.removeAttribute('hidden');
     // primera opción de foco dentro del menú
-    const firstLink = sideDrawer?.querySelector('a.nav-item');
-    firstLink?.focus?.();
+    const firstLink = sideDrawer ? sideDrawer.querySelector('a.nav-item') : null;
+    if(firstLink && firstLink.focus) firstLink.focus();
   }
   function closeSidebar(){
     body.classList.remove('sidebar-open');
-    menuBtn?.setAttribute('aria-expanded','false');
-    backdrop?.setAttribute('hidden','');
+    if(menuBtn) menuBtn.setAttribute('aria-expanded','false');
+    if(backdrop) backdrop.setAttribute('hidden','');
   }
   function toggleSidebar(){
     if(body.classList.contains('sidebar-open')) closeSidebar(); else openSidebar();
   }
 
-  menuBtn?.addEventListener('click', toggleSidebar);
-  backdrop?.addEventListener('click', closeSidebar);
+  if(menuBtn) menuBtn.addEventListener('click', toggleSidebar);
+  if(backdrop) backdrop.addEventListener('click', closeSidebar);
   window.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeSidebar(); });
 
   // ---------- Router ----------
   let ROUTES=[]; let sideLinks=[];
-  function pageElFromRoute(route){ const id='page-'+route.slice(1).replaceAll('/','-'); return $('#'+id); }
+  function pageElFromRoute(route){ const id='page-'+route.slice(1).split('/').join('-'); return $('#'+id); }
   function setActive(route){
     $$('.page').forEach(p=>p.classList.remove('active'));
-    (pageElFromRoute(route) || $('#page-inicio'))?.classList.add('active');
+    var current = pageElFromRoute(route) || $('#page-inicio');
+    if(current) current.classList.add('active');
     sideLinks.forEach(a=> a.classList.toggle('active', a.dataset.route===route));
     // En móvil, al navegar cerramos el drawer
     closeSidebar();
@@ -142,22 +146,40 @@
   // ---------- Wi-Fi demo ----------
   function initWifiInteractions(){
     const pass=$('#wifi-pass'); const btnShow=$('#btn-show');
-    btnShow?.addEventListener('click', ()=>{
-      const show=pass.type==='password'; pass.type=show?'text':'password'; btnShow.textContent=show?'Ocultar':'Mostrar';
-    });
-    const scanBtn=$('#btn-scan'); const modal=$('#scan-modal'); const closeBtn=$('#scan-close'); const refreshBtn=$('#scan-refresh'); const ssidInput=$('#wifi-ssid');
-    function openModal(){ modal?.classList.add('open'); } function closeModal(){ modal?.classList.remove('open'); }
-    scanBtn?.addEventListener('click', openModal); closeBtn?.addEventListener('click', closeModal);
-    modal?.addEventListener('click', (e)=>{ if(e.target===modal) closeModal(); });
-    refreshBtn?.addEventListener('click', ()=>{/* no-op */});
+    if(btnShow){
+      btnShow.addEventListener('click', ()=>{
+        const show=pass.type==='password';
+        pass.type=show?'text':'password';
+        btnShow.textContent=show?'Ocultar':'Mostrar';
+      });
+    }
+    const scanBtn=$('#btn-scan');
+    const modal=$('#scan-modal');
+    const closeBtn=$('#scan-close');
+    const refreshBtn=$('#scan-refresh');
+    const ssidInput=$('#wifi-ssid');
+    function openModal(){ if(modal) modal.classList.add('open'); }
+    function closeModal(){ if(modal) modal.classList.remove('open'); }
+    if(scanBtn) scanBtn.addEventListener('click', openModal);
+    if(closeBtn) closeBtn.addEventListener('click', closeModal);
+    if(modal) modal.addEventListener('click', (e)=>{ if(e.target===modal) closeModal(); });
+    if(refreshBtn) refreshBtn.addEventListener('click', ()=>{/* no-op */});
     $$('[data-choose-ssid]').forEach(b=>{
       b.addEventListener('click', ()=>{ const s=b.getAttribute('data-choose-ssid'); if(ssidInput&&s) ssidInput.value=s; closeModal(); });
     });
-    const testBtn=$('#btn-test-wifi'); const okB=$('#wifi-banner-ok'); const errB=$('#wifi-banner-err');
-    testBtn?.addEventListener('click', ()=>{
-      if(!ssidInput || !ssidInput.value){ okB&&(okB.style.display='none'); errB&&(errB.style.display='block'); return; }
-      errB&&(errB.style.display='none'); if(okB){ okB.style.display='block'; setTimeout(()=> okB.style.display='none',2000); }
-    });
+    const testBtn=$('#btn-test-wifi');
+    const okB=$('#wifi-banner-ok');
+    const errB=$('#wifi-banner-err');
+    if(testBtn){
+      testBtn.addEventListener('click', ()=>{
+        if(!ssidInput || !ssidInput.value){ if(okB) okB.style.display='none'; if(errB) errB.style.display='block'; return; }
+        if(errB) errB.style.display='none';
+        if(okB){
+          okB.style.display='block';
+          setTimeout(()=>{ okB.style.display='none'; },2000);
+        }
+      });
+    }
   }
 
   // ---------- Boot ----------
