@@ -77,7 +77,7 @@
                   <div class="col-6">
                     <label for="wifi-ssid">SSID</label>
                     <div class="input-wrap">
-                      <input id="wifi-ssid" type="text" placeholder="MiRed">
+                      <input id="wifi-ssid" data-config="network.wifi.ssid" type="text" placeholder="MiRed">
                       <button class="inline-action" id="btn-scan">Escanear</button>
                     </div>
                     <div class="hint">Usa el escaneo para elegir SSID y seguridad.</div>
@@ -85,19 +85,19 @@
                   <div class="col-6">
                     <label for="wifi-pass">Contraseña</label>
                     <div class="input-wrap">
-                      <input id="wifi-pass" type="password" placeholder="••••••••">
+                      <input id="wifi-pass" data-config="network.wifi.password" type="password" placeholder="••••••••">
                       <button class="inline-action" id="btn-show">Mostrar</button>
                     </div>
                     <div class="hint">Recomendado WPA2/WPA3. Evitar WEP.</div>
                   </div>
-                  <div class="col-4"><label for="wifi-mode">Modo</label><select id="wifi-mode"><option>STA (cliente)</option><option>AP (punto de acceso)</option><option>AP+STA</option></select></div>
-                  <div class="col-4"><label for="wifi-band">Banda</label><select id="wifi-band"><option>2.4 GHz</option><option>5 GHz (si disponible)</option></select></div>
-                  <div class="col-4"><label>SSID oculto</label><select><option>No</option><option>Sí</option></select></div>
+                  <div class="col-4"><label for="wifi-mode">Modo</label><select id="wifi-mode" data-config="network.wifi.mode"><option value="STA">STA (cliente)</option><option value="AP">AP (punto de acceso)</option><option value="AP+STA">AP+STA</option></select></div>
+                  <div class="col-4"><label for="wifi-band">Banda</label><select id="wifi-band" data-config="network.wifi.band"><option value="2.4 GHz">2.4 GHz</option><option value="5 GHz">5 GHz (si disponible)</option></select></div>
+                  <div class="col-4"><label for="wifi-hidden">SSID oculto</label><select id="wifi-hidden" data-config="network.wifi.hidden_ssid"><option value="false">No</option><option value="true">Sí</option></select></div>
                 </div>
               </div>
               <div class="actions">
                 <button class="btn ghost" id="btn-test-wifi">Probar conexión</button>
-                <button class="btn primary">Guardar Wi-Fi</button>
+                <button class="btn primary" id="save-wifi">Guardar Wi-Fi</button>
               </div>
             </section>
           </div>
@@ -185,14 +185,14 @@
               <div class="bd">
                 <div class="row">
                   <div class="col-6"><label>Tipo de dispositivo</label><select><option>Genérico</option><option>Gateway</option><option>Medidor</option><option>Actuador</option></select></div>
-                  <div class="col-6"><label>Zona / Ubicación</label><input type="text" placeholder="Planta A - Línea 2"></div>
+                  <div class="col-6"><label>Zona / Ubicación</label><input id="device-location" data-config="device.location" type="text" placeholder="Planta A - Línea 2"></div>
                   <div class="col-6"><label>Intervalo de muestreo (ms)</label><input type="number" placeholder="100"></div>
                   <div class="col-6"><label>Registro de logs</label><select><option>Errores</option><option>Info</option><option>Debug</option><option>Silencioso</option></select></div>
                 </div>
               </div>
               <div class="actions">
                 <button class="btn">Exportar JSON</button>
-                <button class="btn primary">Guardar Dispositivo</button>
+                <button class="btn primary" id="save-device">Guardar Dispositivo</button>
               </div>
             </section>
           </div>
@@ -444,16 +444,16 @@
               <div class="hd"><h2>Seguridad</h2><span class="hint">Buenas prácticas</span></div>
               <div class="bd">
                 <div class="row">
-                  <div class="col-6"><label>Usuario admin</label><input type="text" placeholder="admin"></div>
-                  <div class="col-6"><label>Contraseña</label><input type="password" placeholder="••••••••"></div>
-                  <div class="col-6"><label>HTTPS</label><select><option>Activado</option><option>Desactivado</option></select></div>
-                  <div class="col-6"><label>API Tokens (RO)</label><select><option>Desactivado</option><option>Activado</option></select></div>
+                  <div class="col-6"><label>Usuario admin</label><input id="sec-admin-user" data-config="security.admin_user" type="text" placeholder="admin"></div>
+                  <div class="col-6"><label>Contraseña</label><input id="sec-password" data-config="security.password" type="password" placeholder="••••••••"></div>
+                  <div class="col-6"><label>HTTPS</label><select id="sec-https" data-config="security.https"><option value="true">Activado</option><option value="false">Desactivado</option></select></div>
+                  <div class="col-6"><label>API Tokens (RO)</label><select id="sec-api-tokens" data-config="security.api_tokens_read_only"><option value="false">Desactivado</option><option value="true">Activado</option></select></div>
                   <div class="col-12"><div class="hint">En firmware real: CSP estricta, cookies HttpOnly/SameSite, deshabilitar CORS salvo orígenes confiables.</div></div>
                 </div>
               </div>
               <div class="actions">
                 <button class="btn">Rotar clave</button>
-                <button class="btn primary">Guardar Seguridad</button>
+                <button class="btn primary" id="save-security">Guardar Seguridad</button>
               </div>
             </section>
           </div>
