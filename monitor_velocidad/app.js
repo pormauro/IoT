@@ -1,44 +1,50 @@
-(function(){
-  const $ = (s, r=document)=> r.querySelector(s);
-  const root=document.documentElement;
-  const toggleBtn=$('#toggle-theme');
-  const themeKey='monitor_velocidad_theme';
-  const saved=localStorage.getItem(themeKey);
-  if(saved==='dark') root.classList.add('dark');
-  function updateToggle(){
-    const dark=root.classList.contains('dark');
-    if(toggleBtn) toggleBtn.setAttribute('aria-pressed', dark?'true':'false');
-    const ico=toggleBtn?toggleBtn.querySelector('.ico'):null;
-    const txt=toggleBtn?toggleBtn.querySelector('.txt'):null;
-    if(ico) ico.textContent=dark?'☀️':'🌙';
-    if(txt) txt.textContent=dark?'Light':'Dark';
-  }
-  if(toggleBtn){
-    toggleBtn.addEventListener('click', ()=>{
-      root.classList.toggle('dark');
-      localStorage.setItem(themeKey, root.classList.contains('dark')?'dark':'light');
-      updateToggle();
-    });
-  }
-  updateToggle();
+const vel = document.getElementById('vel');
+const pos = document.getElementById('pos');
+const timeEl = document.getElementById('time');
+const resetBtn = document.getElementById('reset');
+const dhcp = document.getElementById('dhcp');
+const ip = document.getElementById('ip');
+const gw = document.getElementById('gw');
+const sm = document.getElementById('sm');
+const dns = document.getElementById('dns');
+const staticDiv = document.getElementById('static');
 
-  async function update(){
-    try{
-      const res = await fetch('/data',{cache:'no-store'});
-      if(!res.ok) throw new Error('net');
-      const j = await res.json();
-      $('#velocidad').textContent = j.speed.toFixed(2);
-      $('#posicion').textContent = j.position;
-      $('#tiempo').textContent = j.time;
-    }catch(e){
-      console.warn('update failed',e);
-    }
-  }
-  setInterval(update,500);
-  update();
+resetBtn.addEventListener('click', ()=>fetch('/reset'));
 
-  const resetBtn=$('#reset');
-  if(resetBtn){
-    resetBtn.addEventListener('click', ()=>{ fetch('/reset',{cache:'no-store'}); });
-  }
-})();
+dhcp.addEventListener('change', ()=>{
+  staticDiv.style.display = dhcp.checked ? 'none':'block';
+});
+
+async function loadData(){
+  const r = await fetch('/data');
+  const j = await r.json();
+  vel.textContent = j.speed.toFixed(2);
+  pos.textContent = j.position;
+  timeEl.textContent = j.time;
+}
+setInterval(loadData, 500); loadData();
+
+async function loadConfig(){
+  const r = await fetch('/config');
+  const j = await r.json();
+  dhcp.checked = j.dhcp;
+  ip.value = j.ip;
+  gw.value = j.gateway;
+  sm.value = j.subnet;
+  dns.value = j.dns;
+  staticDiv.style.display = dhcp.checked ? 'none':'block';
+}
+loadConfig();
+
+const form = document.getElementById('netForm');
+form.addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  const p = new URLSearchParams();
+  p.append('dhcp', dhcp.checked ? '1':'0');
+  p.append('ip', ip.value);
+  p.append('gw', gw.value);
+  p.append('sm', sm.value);
+  p.append('dns', dns.value);
+  await fetch('/config?'+p.toString());
+  alert('Configuración guardada. Reinicie el dispositivo para aplicar.');
+});

@@ -4,30 +4,28 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Monitor de Velocidad</title>
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="/styles.css" />
 </head>
 <body>
-  <header class="hdr">
-    <h1>Monitor de Velocidad</h1>
-    <button id="toggle-theme" class="theme-toggle" aria-pressed="false" title="Cambiar tema">
-      <span class="ico">🌙</span><span class="txt">Dark</span>
-    </button>
-  </header>
-  <main class="content">
-    <section class="metric">
-      <h2>Velocidad</h2>
-      <p id="velocidad" class="value">0</p>
-    </section>
-    <section class="metric">
-      <h2>Posición</h2>
-      <p id="posicion" class="value">0</p>
-    </section>
-    <section class="metric">
-      <h2>Tiempo</h2>
-      <p id="tiempo" class="value">0</p>
-    </section>
-    <button id="reset" class="btn primary">Reiniciar</button>
-  </main>
-  <script src="app.js"></script>
+  <h1>Monitor de Velocidad</h1>
+  <div class="metrics">
+    <p>Velocidad: <span id="vel">0</span></p>
+    <p>Posición: <span id="pos">0</span></p>
+    <p>Tiempo: <span id="time">0</span>s</p>
+    <button id="reset">Reiniciar</button>
+  </div>
+  <hr />
+  <h2>Configuración de Red</h2>
+  <form id="netForm">
+    <label><input type="checkbox" id="dhcp"> Usar DHCP</label>
+    <div id="static">
+      <label>IP: <input id="ip" placeholder="192.168.1.177" /></label>
+      <label>Máscara: <input id="sm" placeholder="255.255.255.0" /></label>
+      <label>Gateway: <input id="gw" placeholder="192.168.1.1" /></label>
+      <label>DNS: <input id="dns" placeholder="8.8.8.8" /></label>
+    </div>
+    <button type="submit">Guardar</button>
+  </form>
+  <script src="/app.js"></script>
 </body>
 </html>
