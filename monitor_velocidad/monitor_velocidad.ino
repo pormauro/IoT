@@ -1,6 +1,6 @@
 #include <SPI.h>
 #include <Ethernet.h>
-#include <Encoder.h>
+#include "EncoderInterrupt.h"
 
 // Configuración de red: ajustar a la red local
 byte mac[] = {0xDE,0xAD,0xBE,0xEF,0xFE,0xED};
@@ -8,7 +8,7 @@ IPAddress ip(192,168,1,177);
 EthernetServer server(80);
 
 // Pines del encoder (usar interrupciones para precisión)
-Encoder encoder(2,3);
+EncoderInterrupt encoder(2,3);
 long lastPosition = 0;
 unsigned long lastTime = 0;
 unsigned long startTime = 0;
@@ -16,6 +16,7 @@ unsigned long startTime = 0;
 void setup(){
   Ethernet.begin(mac, ip);
   server.begin();
+  encoder.begin();
   encoder.write(0);
   lastPosition = 0;
   lastTime = millis();
