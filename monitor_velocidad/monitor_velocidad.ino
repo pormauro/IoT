@@ -117,6 +117,10 @@ EncoderInterrupt encoder(2,3);
 long lastPosition = 0;
 unsigned long lastTime = 0;
 unsigned long startTime = 0;
+long serialLastPosition = 0;
+unsigned long serialLastTime = 0;
+unsigned long lastSerialPrint = 0;
+const unsigned long SERIAL_INTERVAL = 1000;
 
 void loadConfig(){
   EEPROM.get(0, netCfg);
@@ -154,6 +158,7 @@ void applyNetwork(){
 }
 
 void setup(){
+  Serial.begin(115200);
   loadConfig();
   applyNetwork();
   server.begin();
@@ -161,7 +166,11 @@ void setup(){
   encoder.write(0);
   lastPosition = 0;
   lastTime = millis();
-  startTime = millis();
+  serialLastPosition = 0;
+  serialLastTime = lastTime;
+  startTime = lastTime;
+  lastSerialPrint = 0;
+  Serial.println("Monitor de Velocidad iniciado");
 }
 
 void sendContent(EthernetClient &client, const char* content, const char* type){
@@ -207,22 +216,45 @@ void updateConfig(const String &qs){
   saveConfig();
 }
 
+void logSerial(){
+  unsigned long now = millis();
+  if(now - lastSerialPrint >= SERIAL_INTERVAL){
+    long pos = encoder.read();
+    float dt = (now - serialLastTime) / 1000.0;
+    float speed = dt>0 ? (pos - serialLastPosition) / dt : 0.0;
+    serialLastPosition = pos;
+    serialLastTime = now;
+    unsigned long elapsed = (now - startTime) / 1000;
+    Serial.print("Posición: ");
+    Serial.print(pos);
+    Serial.print(" | Velocidad: ");
+    Serial.print(speed,2);
+    Serial.print(" | Tiempo: ");
+    Serial.println(elapsed);
+    lastSerialPrint = now;
+  }
+}
+
 void loop(){
   EthernetClient client = server.available();
   if(client){
     String req = client.readStringUntil('\r');
     client.flush();
 
-    if(req.startsWith("GET /reset")){
-      encoder.write(0);
-      lastPosition = 0;
-      lastTime = millis();
-      startTime = millis();
-      client.println("HTTP/1.1 200 OK");
-      client.println("Connection: close");
-      client.println();
-      return;
-    }
+      if(req.startsWith("GET /reset")){
+        encoder.write(0);
+        lastPosition = 0;
+        lastTime = millis();
+        startTime = millis();
+        serialLastPosition = 0;
+        serialLastTime = lastTime;
+        lastSerialPrint = 0;
+        Serial.println("Reinicio");
+        client.println("HTTP/1.1 200 OK");
+        client.println("Connection: close");
+        client.println();
+        return;
+      }
 
     if(req.startsWith("GET /data")){
       long pos = encoder.read();
@@ -271,4 +303,5 @@ void loop(){
 
     sendContent(client, INDEX_HTML, "text/html");
   }
+  logSerial();
 }
