@@ -1,0 +1,69 @@
+{
+  "device": {
+    "name": "Placa de Reporte Automatico de Tanque",
+    "location": "",
+    "report_interval_minutes": 5
+  },
+  "network": {
+    "wifi": {
+      "ssid": "",
+      "password": "",
+      "mode": "STA",
+      "band": "2.4 GHz",
+      "hidden_ssid": false
+    },
+    "ipv4": {
+      "dhcp": true,
+      "ip": "",
+      "subnet": "",
+      "gateway": "",
+      "dns": ["", ""]
+    },
+    "bluetooth": {
+      "enabled": false,
+      "modes": {
+        "ble": false,
+        "spp": false
+      },
+      "device_name": ""
+    },
+    "profiles": []
+  },
+  "modbus": {
+    "tcp": {
+      "enabled": false,
+      "port": 502
+    },
+    "rtu": {
+      "enabled": false,
+      "baud_rate": 9600,
+      "parity": "none",
+      "stop_bits": 1
+    }
+  },
+  "gateway": {
+    "mapping": [],
+    "monitoring": {
+      "tx_packets": 0,
+      "rx_packets": 0,
+      "errors": 0,
+      "connections": 0,
+      "capture": "off"
+    }
+  },
+  "firmware": {
+    "current_version": "v1.0.0",
+    "target_version": "",
+    "file_url": "",
+    "sha256": "",
+    "auto_reboot": true,
+    "release_notes": "",
+    "history": []
+  },
+  "security": {
+    "admin_user": "admin",
+    "password": "",
+    "https": true,
+    "api_tokens_read_only": false
+  }
+}
