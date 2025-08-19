@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Monitor de Velocidad</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="hdr">
+    <h1>Monitor de Velocidad</h1>
+    <button id="toggle-theme" class="theme-toggle" aria-pressed="false" title="Cambiar tema">
+      <span class="ico">🌙</span><span class="txt">Dark</span>
+    </button>
+  </header>
+  <main class="content">
+    <section class="metric">
+      <h2>Velocidad</h2>
+      <p id="velocidad" class="value">0</p>
+    </section>
+    <section class="metric">
+      <h2>Posición</h2>
+      <p id="posicion" class="value">0</p>
+    </section>
+    <section class="metric">
+      <h2>Tiempo</h2>
+      <p id="tiempo" class="value">0</p>
+    </section>
+    <button id="reset" class="btn primary">Reiniciar</button>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
