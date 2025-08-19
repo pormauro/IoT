@@ -2,54 +2,6 @@
   const $ = (s, r=document)=> r.querySelector(s);
   const $$ = (s, r=document)=> Array.from(r.querySelectorAll(s));
 
-  let CONFIG = {};
-  async function loadConfig(){
-    try{
-      const res = await fetch('/config',{cache:'no-store'});
-      CONFIG = await res.json();
-    }catch(e){
-      console.warn('[config] error:', e.message);
-      CONFIG = {};
-    }
-  }
-  function getPath(obj, path){
-    return path.split('.').reduce((o,p)=> (o?o[p]:undefined), obj);
-  }
-  function setPath(obj, path, val){
-    const parts = path.split('.');
-    let o=obj;
-    while(parts.length>1){
-      const p=parts.shift();
-      if(typeof o[p] !== 'object') o[p] = {};
-      o=o[p];
-    }
-    o[parts[0]]=val;
-  }
-  function bindConfig(){
-    $$('[data-config]').forEach(el=>{
-      const path = el.dataset.config;
-      const val = getPath(CONFIG, path);
-      if(val !== undefined){
-        if(el.type==='checkbox') el.checked = val;
-        else el.value = val;
-      }
-      el.addEventListener('change', ()=>{
-        let v = el.type==='checkbox'? el.checked : el.value;
-        if(v==='true') v=true;
-        else if(v==='false') v=false;
-        else if(el.type==='number') v=parseFloat(v);
-        setPath(CONFIG, path, v);
-      });
-    });
-  }
-  async function saveConfig(){
-    try{
-      await fetch('/config',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(CONFIG,null,2)});
-    }catch(e){
-      console.warn('[config] save error:', e.message);
-    }
-  }
-
   // ---------- NAV dinámico (nav.json con fallback) ----------
   const NAV_TREE_FALLBACK = [
     { type:'group', label:'General', icon:'📋', children:[
@@ -239,7 +191,6 @@
   // ---------- Boot ----------
   async function boot(){
     const tree = await loadNavTree();
-    await loadConfig();
     if(sideNav){
       sideNav.innerHTML=''; renderTree(tree, sideNav, 0);
       sideLinks = $$('#side-nav a.nav-item'); ROUTES = collectRoutes(tree);
@@ -248,14 +199,7 @@
       setActive(parseRoute());
       bindSideLinkClicks();
     }
-    bindConfig();
     initWifiInteractions();
-    const saveWifiBtn = $('#save-wifi');
-    if(saveWifiBtn) saveWifiBtn.addEventListener('click', saveConfig);
-    const saveDeviceBtn = $('#save-device');
-    if(saveDeviceBtn) saveDeviceBtn.addEventListener('click', saveConfig);
-    const saveSecBtn = $('#save-security');
-    if(saveSecBtn) saveSecBtn.addEventListener('click', saveConfig);
   }
   boot();
 })();
