@@ -1,9 +1,9 @@
 """Speed Monitor — pantalla dividida (arriba info grande, abajo gráfico, dark)
 
 Lee JSON desde http://<board_ip><endpoint> (config.json):
-{"position": <int>, "speed": <float cuentas/seg>, "time": <uint seg>}
+{"position": <int>, "speed": <float cuentas/seg>, "time": <uint seg>, "run": <uint>, "stop": <uint>}
 
-- Arriba (HUD): Vel: <m/min>, Dist: <m>, "YYYY-MM-DD HH:MM:SS", logo (si logo.png existe).
+- Arriba (HUD): Vel: <m/min>, Dist: <m>, Total/Marcha/Parada (min), "YYYY-MM-DD HH:MM:SS", logo (si logo.png existe).
 - Abajo: gráfico de velocidad (m/min).
 - Fullscreen automático, sin superposiciones.
 - Estilo oscuro.
@@ -34,7 +34,8 @@ LOGO_PATH = pathlib.Path(__file__).with_name("logo.png")
 # ---- Tamaños de fuente (ajustables) ----
 FONT_SPEED    = 60   # Vel:
 FONT_METERS   = 60   # Dist:
-FONT_DATETIME = 60   # fecha/hora
+FONT_TIME     = 40   # tiempos
+FONT_DATETIME = 40   # fecha/hora
 FONT_STATUS   = 30   # "SIN CONEXIÓN"
 
 
@@ -145,11 +146,23 @@ def main() -> None:
         va="top", ha="left", fontsize=FONT_SPEED, fontweight="bold", color='white'
     )
     meters_text = info_ax.text(
-        0.01, 0.55, "Dist: --.- m",
+        0.01, 0.74, "Dist: --.- m",
         va="top", ha="left", fontsize=FONT_METERS, fontweight="bold", color='white'
     )
+    total_text = info_ax.text(
+        0.01, 0.58, "Total: --.- min",
+        va="top", ha="left", fontsize=FONT_TIME, fontweight="bold", color='white'
+    )
+    run_text = info_ax.text(
+        0.01, 0.42, "Marcha: --.- min",
+        va="top", ha="left", fontsize=FONT_TIME, fontweight="bold", color='white'
+    )
+    stop_text = info_ax.text(
+        0.01, 0.26, "Parada: --.- min",
+        va="top", ha="left", fontsize=FONT_TIME, fontweight="bold", color='white'
+    )
     datetime_text = info_ax.text(
-        0.01, 0.20, "--",
+        0.01, 0.10, "--",
         va="top", ha="left", fontsize=FONT_DATETIME, color='white'
     )
     status_text = info_ax.text(
@@ -192,6 +205,9 @@ def main() -> None:
         else:
             spd_cps = get_float(payload, "speed")      # cuentas/seg
             pos_counts = get_int(payload, "position")  # cuentas acumuladas
+            total_secs = get_int(payload, "time")
+            run_secs = get_int(payload, "run")
+            stop_secs = get_int(payload, "stop")
 
             if spd_cps is not None:
                 spd_mpm = (spd_cps * 60.0) / (ppm if ppm != 0 else 1.0)
@@ -209,6 +225,12 @@ def main() -> None:
                 last_position = pos_counts
                 meters_value = pos_counts / (ppm if ppm != 0 else 1.0)
                 meters_text.set_text(f"Dist: {meters_value:.2f} m")
+            if total_secs is not None:
+                total_text.set_text(f"Total: {total_secs / 60:.1f} min")
+            if run_secs is not None:
+                run_text.set_text(f"Marcha: {run_secs / 60:.1f} min")
+            if stop_secs is not None:
+                stop_text.set_text(f"Parada: {stop_secs / 60:.1f} min")
 
         # Ajustar ejes del gráfico
         if times and speeds:
@@ -226,7 +248,7 @@ def main() -> None:
             ax.set_ylim(0, 10)
 
         line.set_data(list(times), list(speeds))
-        return line, speed_text, meters_text, datetime_text, status_text
+        return line, speed_text, meters_text, total_text, run_text, stop_text, datetime_text, status_text
 
     ani = animation.FuncAnimation(fig, update, interval=max(100, int(poll_interval * 1000)))
 

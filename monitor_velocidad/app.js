@@ -1,6 +1,8 @@
 const vel = document.getElementById('vel');
 const pos = document.getElementById('pos');
-const timeEl = document.getElementById('time');
+const totalEl = document.getElementById('time_total');
+const runEl = document.getElementById('time_run');
+const stopEl = document.getElementById('time_stop');
 const resetBtn = document.getElementById('reset');
 const dhcp = document.getElementById('dhcp');
 const ip = document.getElementById('ip');
@@ -20,7 +22,9 @@ async function loadData(){
   const j = await r.json();
   vel.textContent = j.speed.toFixed(2);
   pos.textContent = j.position;
-  timeEl.textContent = j.time;
+  totalEl.textContent = (j.time / 60).toFixed(1);
+  runEl.textContent = (j.run / 60).toFixed(1);
+  stopEl.textContent = (j.stop / 60).toFixed(1);
 }
 setInterval(loadData, 500); loadData();
 
