@@ -1,7 +1,7 @@
 # Speed Monitor Python Application
 
-Esta aplicación Python consulta una placa de medicón de velocidad a través de HTTP y
-muestra los datos en un gráfico en tiempo real.
+Esta aplicación Python consulta una placa de medición de velocidad a través de HTTP y
+muestra en pantalla completa la velocidad, distancia y tiempos sin utilizar gráficos.
 
 ## Configuración
 
@@ -22,5 +22,5 @@ intervalo de consulta:
 python3 speed_monitor.py
 ```
 
-La aplicación abrirá una ventana de matplotlib con el gráfico de velocidad en
-función del tiempo.
+La aplicación abrirá una ventana de matplotlib con los datos en texto grande.
+Si existe un archivo ``logo.png`` en la carpeta se mostrará como logo cuadrado.
