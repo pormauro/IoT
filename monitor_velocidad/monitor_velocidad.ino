@@ -4,7 +4,7 @@
       GET  /           → HTML mínimo de configuración
       GET  /config     → HTML de configuración
       POST /config     → Guarda configuración en EEPROM (key=value)
-      GET  /data       → JSON {"position":<int>,"speed":<float2>,"time":<uint>}
+      GET  /data       → JSON {"position":<int>,"speed":<float2>,"time":<uint>,"run":<uint>,"stop":<uint>}
       GET  /reset      → Pone a cero encoder y tiempo (204)
       GET  /send-test  → Envía JSON una vez al destino configurado (204)
       GET  /calib      → HTML para calibrar PPM
@@ -54,6 +54,8 @@ unsigned long tStartMs = 0;
 unsigned long lastSpdMs = 0;
 long lastSpdCount = 0;
 float lastSpeedCps = 0.0f; // cuentas/seg
+unsigned long runSecs = 0;
+unsigned long stopSecs = 0;
 
 // ---------- Envío periódico ----------
 unsigned long lastSendMs = 0;
@@ -170,6 +172,8 @@ void updateSpeedIfDue() {
     lastSpeedCps = (float)dc * 1000.0f / (float)dt;
     lastSpdCount = c;
     lastSpdMs = now;
+    unsigned long secs = dt / 1000UL;
+    if (lastSpeedCps == 0.0f) stopSecs += secs; else runSecs += secs;
   }
 }
 
@@ -179,7 +183,7 @@ void buildJSON(char* out, size_t n) {
   unsigned long secs = (millis() - tStartMs) / 1000UL;
   char spdbuf[16];
   dtostrf(lastSpeedCps, 0, 2, spdbuf); // evita printf float
-  snprintf(out, n, "{\"position\":%ld,\"speed\":%s,\"time\":%lu}", encCount, spdbuf, secs);
+  snprintf(out, n, "{\"position\":%ld,\"speed\":%s,\"time\":%lu,\"run\":%lu,\"stop\":%lu}", encCount, spdbuf, secs, runSecs, stopSecs);
 }
 
 // ---------- CORS / headers ----------
@@ -414,6 +418,8 @@ void handleRequest(EthernetClient &client) {
     lastSpdMs = 0;
     lastSpeedCps = 0;
     tStartMs = millis();
+    runSecs = 0;
+    stopSecs = 0;
     send204(client);
   }
   else if (!strcmp(method,"GET") && !strcmp(path,"/send-test")) {
