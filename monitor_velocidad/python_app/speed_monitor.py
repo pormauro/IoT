@@ -32,11 +32,11 @@ CONFIG_PATH = pathlib.Path(__file__).with_name("config.json")
 LOGO_PATH = pathlib.Path(__file__).with_name("logo.png")
 
 # ---- Tamaños de fuente (ajustables) ----
-FONT_SPEED    = 60   # Vel:
-FONT_METERS   = 60   # Dist:
-FONT_TIME     = 40   # tiempos
-FONT_DATETIME = 40   # fecha/hora
-FONT_STATUS   = 30   # "SIN CONEXIÓN"
+FONT_SPEED    = 35   # Vel:
+FONT_METERS   = 35   # Dist:
+FONT_TIME     = 35   # tiempos
+FONT_DATETIME = 35   # fecha/hora
+FONT_STATUS   = 25   # "SIN CONEXIÓN"
 
 
 # ---------------- Config ----------------
@@ -142,27 +142,27 @@ def main() -> None:
     # Texto grande (columna izquierda del HUD)
     # Coordenadas del info_ax: (0,0) abajo-izq, (1,1) arriba-der
     speed_text = info_ax.text(
-        0.01, 0.90, "Vel: --.- m/min",
+        0.01, 1.0, "Vel: --.- m/min",
         va="top", ha="left", fontsize=FONT_SPEED, fontweight="bold", color='white'
     )
     meters_text = info_ax.text(
-        0.01, 0.74, "Dist: --.- m",
+        0.01, 0.8, "Dist: --.- m",
         va="top", ha="left", fontsize=FONT_METERS, fontweight="bold", color='white'
     )
     total_text = info_ax.text(
-        0.01, 0.58, "Total: --.- min",
+        0.01, 0.6, "Total: --.- min",
         va="top", ha="left", fontsize=FONT_TIME, fontweight="bold", color='white'
     )
     run_text = info_ax.text(
-        0.01, 0.42, "Marcha: --.- min",
+        0.01, 0.4, "Marcha: --.- min",
         va="top", ha="left", fontsize=FONT_TIME, fontweight="bold", color='white'
     )
     stop_text = info_ax.text(
-        0.01, 0.26, "Parada: --.- min",
+        0.01, 0.2, "Parada: --.- min",
         va="top", ha="left", fontsize=FONT_TIME, fontweight="bold", color='white'
     )
     datetime_text = info_ax.text(
-        0.01, 0.10, "--",
+        0.01, 0.0, "--",
         va="top", ha="left", fontsize=FONT_DATETIME, color='white'
     )
     status_text = info_ax.text(
