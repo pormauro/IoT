@@ -31,11 +31,11 @@ CONFIG_PATH = pathlib.Path(__file__).with_name("config.json")
 LOGO_PATH = pathlib.Path(__file__).with_name("logo.png")
 
 # ---- Tamaños de fuente (ajustables) ----
-FONT_SPEED    = 120  # Velocidad principal
-FONT_METERS   = 60   # Distancia
-FONT_TIME     = 60   # tiempos
-FONT_DATETIME = 40   # fecha/hora
-FONT_STATUS   = 40   # "SIN CONEXIÓN"
+FONT_SPEED    = 85  # Velocidad principal
+FONT_METERS   = 40   # Distancia
+FONT_TIME     = 40   # tiempos
+FONT_DATETIME = 30   # fecha/hora
+FONT_STATUS   = 20   # "SIN CONEXIÓN"
 
 
 # ---------------- Config ----------------
@@ -127,32 +127,32 @@ def main() -> None:
 
     # Texto grande centrado
     speed_text = info_ax.text(
-        0.5, 0.75, "Vel: --.- m/min",
-        va="center", ha="center", fontsize=FONT_SPEED, fontweight="bold", color='white'
+        0.02, 0.85, "Vel: --.- m/min",
+        va="center", ha="left", fontsize=FONT_SPEED, fontweight="bold", color='orange'
     )
     meters_text = info_ax.text(
-        0.5, 0.55, "Dist: --.- m",
-        va="center", ha="center", fontsize=FONT_METERS, fontweight="bold", color='white'
+        0.02, 0.70, "Dist: --.- m",
+        va="center", ha="left", fontsize=FONT_METERS, fontweight="bold", color='white'
     )
     total_text = info_ax.text(
-        0.33, 0.30, "Total: --.- min",
-        va="center", ha="center", fontsize=FONT_TIME, fontweight="bold", color='white'
+        0.02, 0.55, "Total: --.- min",
+        va="center", ha="left", fontsize=FONT_TIME, fontweight="bold", color='white'
     )
     run_text = info_ax.text(
-        0.50, 0.30, "Marcha: --.- min",
-        va="center", ha="center", fontsize=FONT_TIME, fontweight="bold", color='white'
+        0.02, 0.40, "Marcha: --.- min",
+        va="center", ha="left", fontsize=FONT_TIME, fontweight="bold", color='green'
     )
     stop_text = info_ax.text(
-        0.67, 0.30, "Parada: --.- min",
-        va="center", ha="center", fontsize=FONT_TIME, fontweight="bold", color='white'
+        0.02, 0.25, "Parada: --.- min",
+        va="center", ha="left", fontsize=FONT_TIME, fontweight="bold", color='red'
     )
     datetime_text = info_ax.text(
-        0.5, 0.08, "--",
-        va="center", ha="center", fontsize=FONT_DATETIME, color='white'
+        0.02, 0.10, "--",
+        va="center", ha="left", fontsize=FONT_DATETIME, color='white'
     )
     status_text = info_ax.text(
-        0.99, 0.01, "",  # sin texto al inicio; se usa si no hay conexión
-        va="bottom", ha="right", fontsize=FONT_STATUS, fontweight="bold"
+        0.02, 0.02, "",
+        va="center", ha="left", fontsize=FONT_STATUS, fontweight="bold"
     )
 
     # Logo a la derecha (si existe). Mantener relación cuadrada
@@ -198,13 +198,13 @@ def main() -> None:
             if pos_counts is not None:
                 last_position = pos_counts
                 meters_value = pos_counts / (ppm if ppm != 0 else 1.0)
-                meters_text.set_text(f"Dist: {meters_value:.2f} m")
+                meters_text.set_text(f"Fabricado: {meters_value:.2f} m")
             if total_secs is not None:
-                total_text.set_text(f"Total: {total_secs / 60:.1f} min")
+                total_text.set_text(f"Tiempo Total: {total_secs / 60:.1f} min")
             if run_secs is not None:
-                run_text.set_text(f"Marcha: {run_secs / 60:.1f} min")
+                run_text.set_text(f"Tiempo Marcha: {run_secs / 60:.1f} min")
             if stop_secs is not None:
-                stop_text.set_text(f"Parada: {stop_secs / 60:.1f} min")
+                stop_text.set_text(f"Tiempo Parada: {stop_secs / 60:.1f} min")
 
         return speed_text, meters_text, total_text, run_text, stop_text, datetime_text, status_text
 

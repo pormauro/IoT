@@ -342,6 +342,20 @@ bool startsWith(const char* s, const char* pfx) {
   return true;
 }
 
+// ---------- Reset consistente y atómico ----------
+void resetStats() {
+  noInterrupts();
+  encCount = 0;
+  lastSpdCount = 0;
+  lastSpeedCps = 0.0f;
+  lastSpdMs = millis();   // clave: evitar dt gigante en el primer cálculo
+  runSecs = 0;
+  stopSecs = 0;
+  interrupts();
+  tStartMs = millis();    // reinicia cronómetro total
+  lastSendMs = millis();  // evita envío “viejo” inmediato
+}
+
 // ---------- Parse y manejo de requests ----------
 void handleRequest(EthernetClient &client) {
   char line[128];
@@ -413,13 +427,7 @@ void handleRequest(EthernetClient &client) {
     send200Json(client, json);
   }
   else if (!strcmp(method,"GET") && !strcmp(path,"/reset")) {
-    encCount = 0;
-    lastSpdCount = 0;
-    lastSpdMs = 0;
-    lastSpeedCps = 0;
-    tStartMs = millis();
-    runSecs = 0;
-    stopSecs = 0;
+    resetStats();
     send204(client);
   }
   else if (!strcmp(method,"GET") && !strcmp(path,"/send-test")) {
@@ -477,7 +485,7 @@ void setup() {
   Udp.begin(LOCAL_UDP_PORT);
 
   tStartMs = millis();
-  lastSpdMs = 0;
+  lastSpdMs = millis();   // ← cambio clave
   lastSendMs = millis();
 }
 
